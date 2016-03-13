@@ -4,6 +4,7 @@ import os
 import sys
 import argparse
 from gamestate import GameState
+from board import Board
 
 
 def usage():
@@ -11,16 +12,16 @@ def usage():
 
 
 def start_game(game_type):
+    board = Board()
     p1_name = input("Player 1 enter your name: ")
     if game_type == 'pvp':
         p2_name = input("Player 2 enter your name: ")
-        gs = GameState(game_type, p1_name, p2_name)
+        gs = GameState(game_type, board, p1_name, p2_name)
     elif game_type == "ai":
-        gs = GameState(game_type, p1_name)
+        gs = GameState(game_type, board, p1_name)
 
     while (not gs.game_over):
         os.system('clear')
-        print(gs.winner)
         gs.get_next_move()
 
     os.system('clear')
@@ -42,14 +43,14 @@ def main():
         parser.add_argument("-v", action='version', version='%(prog)s 1.0')
         args = parser.parse_args()
 
-        if (len(sys.argv) == 1):
+        if (len(sys.argv) != 2):
             parser.print_help()
             sys.exit(0)
 
         start_game(args.game_type)
 
     except KeyboardInterrupt:
-        os.system('clear')
+        # os.system('clear')
         sys.exit(0)
 
 if __name__ == '__main__':

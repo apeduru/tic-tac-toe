@@ -53,3 +53,50 @@ class Board(object):
         self.pieces[space] = piece
         self.empty_spaces -= 1
         self.occupied_spaces += 1
+
+    def calculate_column(self, current_piece):
+        board = self.board
+        # Transpose the board matrix to access columns easier
+        board = list(map(list, zip(*board)))
+        pieces = self.pieces
+        for column in board:
+            if all(pieces[piece] == current_piece for piece in column):
+                return True
+        return False
+
+    def calculate_row(self, current_piece):
+        board = self.board
+        pieces = self.pieces
+        for row in board:
+            if all(pieces[piece] == current_piece for piece in row):
+                return True
+        return False
+
+    def calculate_diag(self, current_piece):
+        board = self.board
+        pieces = self.pieces
+        main_diag = [board[i][i] for i in range(len(board))]
+        anti_diag = [board[i][2 - i] for i in range(len(board))]
+
+        if all(pieces[piece] == current_piece for piece in main_diag):
+            return True
+        if all(pieces[piece] == current_piece for piece in anti_diag):
+            return True
+        return False
+
+    def available_moves(self):
+        moves = [m for (m, p) in self.pieces.items() if p is " "]
+        assert len(moves) == self.empty_spaces
+        return sorted(moves)
+
+    def occupied_spaces(self):
+        spaces = [m for (m, p) in self.pieces.items() if p is not " "]
+        assert len(spaces) == self.occupied_spaces
+        return sorted(spaces)
+
+    def display_available_moves(self):
+        moves = self.available_moves()
+        moves = ", ".join(str(move) for move in moves)
+        print("Available moves: {}".format(moves))
+
+
